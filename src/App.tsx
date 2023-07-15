@@ -1,29 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
-function Contact() {
-  return (
-    <div>
-      <h1>Contact</h1>
-    </div>
-  );
-}
-
 function App() {
-  const [count, setCount] = useState(0);
+  const [input, setInput] = useState("");
+  const [counter, setCounter] = useState(0);
 
-  const increment = () => {
-    setCount((prevCounter) => prevCounter + 1);
-    setCount((prevCounter) => prevCounter + 1);
-    setCount((prevCounter) => prevCounter + 1);
-  };
+  useEffect(() => {
+    const incrementor = setInterval(() => {
+      setCounter((prevCounter) => prevCounter + 1);
+    }, 1000);
+
+    return () => clearInterval(incrementor);
+  }, [counter]);
 
   return (
     <>
       <div>
-        <h1>{count}</h1>
-        <Contact />
-        <button onClick={increment}>Increment Count</button>
+        <h2>{counter}</h2>
+        <h1 onClick={() => setCounter(prevCounter + 1)}>Use Effect 🔥</h1>
+        <input onChange={(e) => setInput(e.target.value)} type="text" />
       </div>
     </>
   );
