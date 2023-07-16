@@ -1,26 +1,65 @@
-import { useState, useEffect, useLayoutEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  createContext,
+  ReactNode,
+  useContext,
+} from "react";
 import "./App.css";
 
-function App() {
-  const [counter, setCounter] = useState(0);
+interface CounterContextType {
+  count: number;
+  increment: () => void;
+  decrement: () => void;
+}
 
-  useLayoutEffect(() => {
-    function test() {
-      if (counter === 0) {
-        setCounter(Math.random() * 200);
-      }
-    }
-    test();
-  }, [counter]);
+const CounterContext = createContext<CounterContextType | undefined>(undefined);
+
+interface CounterProviderProps {
+  children: ReactNode;
+}
+
+const CounterProvider = ({ children }: CounterProviderProps) => {
+  const [count, setCount] = useState(0);
+
+  const increment = () => setCount((counter) => counter + 1);
+  const decrement = () => setCount((counter) => counter - 1);
+
+  const contextValue: CounterContextType = {
+    count,
+    increment,
+    decrement,
+  };
 
   return (
-    <>
-      <div>
-        <h2>{counter}</h2>
-        <h1 onClick={() => setCounter(0)}>Use Layout Effect</h1>
-      </div>
-    </>
+    <CounterContext.Provider value={contextValue}>
+      {children}
+    </CounterContext.Provider>
   );
-}
+};
+
+const IncrementCounter = () => {
+  const { increment } = useContext(CounterContext)!;
+  return <button onClick={increment}>Increment</button>;
+};
+
+const DecrementCounter = () => {
+  const { decrement } = useContext(CounterContext)!;
+  return <button onClick={decrement}>Decrement</button>;
+};
+
+const ShowResult = () => {
+  const { count } = useContext(CounterContext)!;
+  return <h1>{count}</h1>;
+};
+
+const App = () => (
+  <CounterProvider>
+    <ShowResult />
+    <IncrementCounter />
+    <DecrementCounter />
+  </CounterProvider>
+);
 
 export default App;
