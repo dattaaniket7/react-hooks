@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  createContext,
-  ReactNode,
-  useContext,
-} from "react";
+import { useContext, useState, createContext, ReactNode } from "react";
 import "./App.css";
 
 interface CounterContextType {
