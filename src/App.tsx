@@ -1,16 +1,23 @@
-import { useRef, useEffect } from "react";
+import { useState, useMemo } from "react";
 
-function App() {
-  const titleRef = useRef();
+const App = () => {
+  const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    console.log(titleRef.current.offsetHeight);
-  }, []);
+  //After usememo
+  const expensiveCalculation = () => {
+    return Math.random() * 1000;
+  };
+
+  const renderedValue = useMemo(() => expensiveCalculation(), [count]);
+
   return (
     <div>
-      <h1 ref={titleRef}>Hello Reducer</h1>
+      <p onClick={() => setCount((prevCount) => prevCount + 1)}>
+        Count: {count}
+      </p>
+      <p>Rendered value: {renderedValue}</p>
     </div>
   );
-}
+};
 
 export default App;
