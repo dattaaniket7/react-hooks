@@ -1,26 +1,36 @@
-import React from "react";
-import Multiplier from "./Multiplier";
+import { startTransition, useEffect, useState, useTransition } from "react";
 
-function App() {
-  const [count, setCount] = React.useState(0);
+export default function App() {
+  const [input, setInput] = useState("");
+  const [pokemon, setPokemon] = useState([]);
+  const [filteredPokemon, setFilteredPokemon] = useState([]);
+  const [isPending, startTransition] = useTransition();
 
-  const handleMultiplier = React.useCallback(() => {
-    setCount((prevCount) => prevCount * 1233);
-  }, [count]);
+  useEffect(() => {
+    const getPokemon = async () => {
+      const res = await fetch("https://pokeapi.co/api/v2/pokemon/");
+      const data = await res.json();
+      setPokemon(data.results);
+    };
+    getPokemon();
+  }, []);
+
+  const handleChange = (e) => {
+    setInput(e.target.value.toLowerCase());
+    startTransition(() => {
+      setFilteredPokemon(pokemon.filter((poke) => poke.name.includes(input)));
+    });
+  };
 
   return (
     <>
-      Count: {count}
-      <button
-        onClick={() => {
-          setCount(count + 1);
-        }}
-      >
-        Click Me!
-      </button>
-      <Multiplier handleClick={handleMultiplier} />
+      <input type="text" onChange={handleChange} value={input} />
+      {isPending && "Loading"}
+      {filteredPokemon.map((poke) => (
+        <div key={poke.name}>
+          <h1>{poke.name}</h1>
+        </div>
+      ))}
     </>
   );
 }
-
-export default App;
