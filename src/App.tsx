@@ -1,23 +1,26 @@
-import { useState, useMemo } from "react";
+import React from "react";
+import Multiplier from "./Multiplier";
 
-const App = () => {
-  const [count, setCount] = useState(0);
+function App() {
+  const [count, setCount] = React.useState(0);
 
-  //After usememo
-  const expensiveCalculation = () => {
-    return Math.random() * 1000;
-  };
-
-  const renderedValue = useMemo(() => expensiveCalculation(), [count]);
+  const handleMultiplier = React.useCallback(() => {
+    setCount((prevCount) => prevCount * 1233);
+  }, [count]);
 
   return (
-    <div>
-      <p onClick={() => setCount((prevCount) => prevCount + 1)}>
-        Count: {count}
-      </p>
-      <p>Rendered value: {renderedValue}</p>
-    </div>
+    <>
+      Count: {count}
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        Click Me!
+      </button>
+      <Multiplier handleClick={handleMultiplier} />
+    </>
   );
-};
+}
 
 export default App;
