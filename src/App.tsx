@@ -1,58 +1,28 @@
-import { useContext, useState, createContext, ReactNode } from "react";
-import "./App.css";
+import React, { useState, useEffect, useCallback, useReducer } from "react";
 
-interface CounterContextType {
-  count: number;
-  increment: () => void;
-  decrement: () => void;
-}
+const initialState = { backgroundColor: "#fff" };
 
-const CounterContext = createContext<CounterContextType | undefined>(undefined);
+const reducer = (state, action) => {
+  switch (action) {
+    case "black":
+      return { backgroundColor: "#000" };
+    case "red":
+      return { backgroundColor: "red" };
+    default:
+      return { backgroundColor: "initial" };
+  }
+};
 
-interface CounterProviderProps {
-  children: ReactNode;
-}
-
-const CounterProvider = ({ children }: CounterProviderProps) => {
-  const [count, setCount] = useState(0);
-
-  const increment = () => setCount((counter) => counter + 1);
-  const decrement = () => setCount((counter) => counter - 1);
-
-  const contextValue: CounterContextType = {
-    count,
-    increment,
-    decrement,
-  };
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <CounterContext.Provider value={contextValue}>
-      {children}
-    </CounterContext.Provider>
+    <div>
+      <h1 style={{ backgroundColor: state.backgroundColor }}>Hello Reducer</h1>
+      <button onClick={() => dispatch("red")}>Turn to Red</button>
+      <button onClick={() => dispatch("black")}>Turn to Black</button>
+    </div>
   );
-};
-
-const IncrementCounter = () => {
-  const { increment } = useContext(CounterContext)!;
-  return <button onClick={increment}>Increment</button>;
-};
-
-const DecrementCounter = () => {
-  const { decrement } = useContext(CounterContext)!;
-  return <button onClick={decrement}>Decrement</button>;
-};
-
-const ShowResult = () => {
-  const { count } = useContext(CounterContext)!;
-  return <h1>{count}</h1>;
-};
-
-const App = () => (
-  <CounterProvider>
-    <ShowResult />
-    <IncrementCounter />
-    <DecrementCounter />
-  </CounterProvider>
-);
+}
 
 export default App;
