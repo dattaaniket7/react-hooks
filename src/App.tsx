@@ -1,26 +1,14 @@
-import React, { useState, useEffect, useCallback, useReducer } from "react";
-
-const initialState = { backgroundColor: "#fff" };
-
-const reducer = (state, action) => {
-  switch (action) {
-    case "black":
-      return { backgroundColor: "#000" };
-    case "red":
-      return { backgroundColor: "red" };
-    default:
-      return { backgroundColor: "initial" };
-  }
-};
+import { useRef, useEffect } from "react";
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const titleRef = useRef();
 
+  useEffect(() => {
+    console.log(titleRef.current.offsetHeight);
+  }, []);
   return (
     <div>
-      <h1 style={{ backgroundColor: state.backgroundColor }}>Hello Reducer</h1>
-      <button onClick={() => dispatch("red")}>Turn to Red</button>
-      <button onClick={() => dispatch("black")}>Turn to Black</button>
+      <h1 ref={titleRef}>Hello Reducer</h1>
     </div>
   );
 }
